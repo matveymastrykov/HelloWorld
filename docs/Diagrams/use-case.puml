@@ -1,0 +1,67 @@
+@startuml
+left to right direction
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam packageStyle rectangle
+
+actor "Кладовщик" as Storekeeper
+actor "Менеджер по закупкам" as Buyer
+actor "Бухгалтер" as Accountant
+actor "Администратор" as Admin
+
+rectangle "Система учёта склада продуктов" {
+  usecase "Авторизоваться (Кладовщик)" as LoginStorekeeper
+  usecase "Переместить товар" as Move
+  usecase "Разместить товар по ячейкам" as Place
+  usecase "Провести инвентаризацию" as Inventory
+  usecase "Зафиксировать расхождения инвентаризации" as InventoryDiff
+  usecase "Списать товар" as WriteOff
+  usecase "Оформить акт списания" as WriteOffAct
+  usecase "Принять товар на склад" as Receive
+  usecase "Выявить расхождения при приёмке" as ReceiveDiff
+  usecase "Проверить сроки годности" as CheckExpiry
+
+  usecase "Авторизоваться (Менеджер)" as LoginBuyer
+  usecase "Управлять номенклатурой" as Nomenclature
+  usecase "Создать заказ поставщику" as Order
+  usecase "Сформировать отчёт по остаткам" as StockReport
+  usecase "Сверить данные с первичкой" as Reconcile
+  usecase "Сформировать отчёт по оборотам" as TurnoverReport
+
+  usecase "Авторизоваться (Бухгалтер)" as LoginAccountant
+
+  usecase "Авторизоваться (Администратор)" as LoginAdmin
+  usecase "Зарегистрировать пользователя" as RegisterUser
+  usecase "Управлять пользователями" as ManageUsers
+}
+
+Storekeeper -- LoginStorekeeper
+LoginStorekeeper ..> Move
+LoginStorekeeper ..> Place
+LoginStorekeeper ..> Inventory
+LoginStorekeeper ..> WriteOff
+LoginStorekeeper ..> Receive
+
+Inventory ..> InventoryDiff : <<include>>
+WriteOff ..> WriteOffAct : <<include>>
+Receive ..> ReceiveDiff : <<include>>
+Receive ..> CheckExpiry : <<include>>
+
+Buyer -- LoginBuyer
+LoginBuyer ..> Nomenclature
+LoginBuyer ..> Order
+LoginBuyer ..> StockReport
+LoginBuyer ..> TurnoverReport
+
+Accountant -- LoginAccountant
+LoginAccountant ..> StockReport
+LoginAccountant ..> TurnoverReport
+StockReport ..> Reconcile : <<include>>
+
+Admin -- LoginAdmin
+LoginAdmin ..> RegisterUser
+LoginAdmin ..> ManageUsers
+@enduml
